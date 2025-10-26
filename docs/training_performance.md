@@ -20,7 +20,7 @@ A loss of 0 would mean the model predicts the correct class with 100% certainty 
 
 The following plot demonstrates how the test loss of the digit recognition model decreases as the size of the training dataset increases. This visually confirms the principle that models generally learn more robust and accurate representations when exposed to more data.
 
-![Model Test Loss vs. Training Data Size](training_performance.png)
+![Model Test Loss vs. Training Data Size](images/training_performance.png)
 
 ### Discussion of Results
 

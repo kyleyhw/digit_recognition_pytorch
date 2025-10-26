@@ -16,7 +16,7 @@ For a complete overview of the project's documentation, please see the **[Docume
 
 ## Training Performance Analysis
 
-![Model Test Loss vs. Training Data Size](training_performance.png)
+![Model Test Loss vs. Training Data Size](docs/images/training_performance.png)
 
 This plot demonstrates how the test loss of the digit recognition model decreases as the size of the training dataset increases. For a detailed explanation of this analysis, including how to interpret loss, please refer to the **[Training Performance Analysis](docs/training_performance.md)** documentation.
 
@@ -30,7 +30,6 @@ This plot demonstrates how the test loss of the digit recognition model decrease
 ├───train.py
 ├───gui.py
 ├───README.md
-├───training_performance.png
 ├───__pycache__/
 ├───checkpoints/
 ├───docs/
@@ -39,6 +38,8 @@ This plot demonstrates how the test loss of the digit recognition model decrease
 │   ├───model.md
 │   ├───train.md
 │   ├───gui.md
+│   ├───images/
+│   │   └───training_performance.png
 │   └───training_performance.md
 ├───models/
 │   ├───mnist_cnn_subset_1200.pt
