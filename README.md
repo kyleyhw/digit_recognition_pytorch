@@ -10,9 +10,9 @@ This project is a handwritten digit recognizer built using PyTorch. It utilizes 
 - **Detailed Documentation**: In-depth explanation of the mathematical principles behind the code.
 - **Unit and Integration Tests**: A suite of tests to ensure the correctness of the data loading, model, and training functions.
 
-## Documentation
+## Documentation Hub
 
-For a complete overview of the project's documentation, please see the **[Documentation Index](docs/index.md)**.
+For a complete and detailed overview of the project's architecture, mathematical principles, design rationales, and usage, please refer to the **[Documentation Index](docs/index.md)**.
 
 ## Training Performance Analysis
 
@@ -30,6 +30,7 @@ This plot demonstrates how the test loss of the digit recognition model decrease
 ├───train.py
 ├───gui.py
 ├───README.md
+├───training_performance.png
 ├───__pycache__/
 ├───checkpoints/
 ├───docs/
@@ -40,6 +41,7 @@ This plot demonstrates how the test loss of the digit recognition model decrease
 │   ├───gui.md
 │   ├───images/
 │   │   └───training_performance.png
+│   ├───testing.md
 │   └───training_performance.md
 ├───models/
 │   ├───mnist_cnn_subset_1200.pt
@@ -99,8 +101,12 @@ python gui.py
 
 ## Testing
 
+The project includes a comprehensive test suite to ensure the correctness and reliability of the codebase. Tests cover data loading, model architecture, and training/evaluation logic.
+
 To run the test suite, use `pytest`:
 
 ```bash
 pytest
 ```
+
+For detailed information on the test suite, including its structure, purpose, and how to interpret test reports, please refer to the **[Testing Documentation](docs/testing.md)**.

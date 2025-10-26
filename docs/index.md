@@ -13,3 +13,5 @@ This page serves as a central index for the project's documentation.
 - **[GUI (`gui.md`)](gui.md)**: Explains the interactive graphical user interface, including the image centering preprocessing.
 
 - **[Training Performance Analysis (`training_performance.md`)](training_performance.md)**: Analyzes the impact of training data size on model performance, including an explanation of loss and a plot.
+
+- **[Testing Documentation (`testing.md`)](testing.md)**: Provides a comprehensive overview of the project's test suite, its organization, and how to interpret test reports.
