@@ -15,6 +15,8 @@ In the context of PyTorch and machine learning, a **tensor** is a multi-dimensio
 
 Data normalization is a crucial preprocessing step in machine learning. The primary goal is to transform the features to be on a similar scale. This helps with the convergence of the optimization algorithm (like gradient descent) used in training.
 
+#### Rationale for Normalization Values (0.5, 0.5)
+
 The normalization in this script transforms the pixel values of the images from the range `[0, 255]` to `[-1, 1]`. This is achieved in two steps:
 
 1.  `transforms.ToTensor()`: This converts the PIL Image (with values in `[0, 255]`) to a PyTorch FloatTensor (with values in `[0.0, 1.0]`).
@@ -35,7 +37,7 @@ The normalization in this script transforms the pixel values of the images from 
     x' = \frac{x - 0.5}{0.5} = 2x - 1
     $$
 
-    This maps the input range `[0.0, 1.0]` to `[-1.0, 1.0]`.
+    This maps the input range `[0.0, 1.0]` to `[-1.0, 1.0]`. This specific range is often preferred in neural networks as it can help with gradient flow and prevent issues like vanishing/exploding gradients, especially with activation functions like `tanh` (though ReLU is used here, `[-1, 1]` is still a good practice).
 
 ## Functions
 
@@ -47,6 +49,14 @@ This function handles the entire data loading process.
 
 - `batch_size` (int, optional): The number of samples per batch. Defaults to 64.
 
+#### Rationale for Batch Size (64)
+
+The choice of batch size involves a trade-off:
+
+-   **Larger Batch Sizes**: Can lead to faster training per epoch due to more efficient computation on GPUs. However, they might converge to sharper minima, which can sometimes generalize less well. They also require more memory.
+-   **Smaller Batch Sizes**: Introduce more noise into the gradient updates, which can help escape shallow local minima and potentially lead to better generalization. However, they can be slower per epoch and have less stable gradient estimates.
+
+A batch size of **64** is a common and empirically effective choice that balances these factors. It's large enough to provide stable gradient estimates and leverage computational parallelism, yet small enough to introduce sufficient noise for good generalization and manage memory efficiently for typical hardware configurations.
 #### Returns
 
 - `tuple`: A tuple containing two `DataLoader` objects:

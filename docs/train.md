@@ -17,9 +17,15 @@ For a single prediction, the model outputs a vector of log-probabilities $z = (z
 
 $$
 \text{Loss} = -z_c = -\log(p_c) 
-$$ 
+$$
 
 By minimizing this loss, we are maximizing the log-probability of the correct class. This is the principle of **Maximum Likelihood Estimation**.
+
+#### Rationale for NLL Loss
+
+-   **Suitability for Classification**: NLL Loss is a standard choice for multi-class classification problems, especially when the model's output layer provides log-probabilities (as `log_softmax` does).
+-   **Numerical Stability**: Using `log_softmax` directly with `NLLLoss` is numerically more stable than computing `softmax` and then taking the logarithm, preventing potential underflow issues with very small probabilities.
+-   **Direct Probability Maximization**: Minimizing NLL Loss is equivalent to maximizing the likelihood of the observed data under the model, which is a statistically sound approach to training classifiers.
 
 ### Backpropagation
 
@@ -35,13 +41,19 @@ Instead of a fixed learning rate, Adadelta adapts the learning rate for each par
 
 $$ 
 \Delta \theta_t = - \frac{\text{RMS}[\Delta \theta]_{t-1}}{\text{RMS}[g]_t} g_t 
-$$ 
+$$
 
 Where:
 - $g_t$ is the gradient at time $t$.
 - $\text{RMS}[\cdot]$ is the root mean square.
 
 This method has the advantage of not requiring a default learning rate.
+
+#### Rationale for Adadelta Optimizer
+
+-   **Adaptive Learning Rate**: Adadelta automatically adapts the learning rates for each parameter, eliminating the need for manual tuning of a global learning rate. This can significantly simplify hyperparameter optimization.
+-   **Robustness**: It is generally robust to noisy gradients and can perform well across a variety of tasks without extensive tuning.
+-   **No Learning Rate Decay Needed (Implicitly Handled)**: Unlike optimizers with a fixed learning rate, Adadelta's adaptive nature often means it handles learning rate decay implicitly, though a scheduler can still be used for further fine-tuning.
 
 ### Learning Rate Scheduler: `StepLR`
 
@@ -51,9 +63,26 @@ The learning rate at epoch `e` is given by:
 
 $$ 
 \text{lr}_e = \text{lr}_0 \times \gamma^{\lfloor e / \text{step\_size} \rfloor} 
-$$ 
+$$
 
 This helps to make larger updates at the beginning of training and smaller, more fine-tuning updates as training progresses.
+
+#### Rationale for StepLR Scheduler and Parameters (gamma=0.7)
+
+-   **Controlled Decay**: `StepLR` provides a simple yet effective way to reduce the learning rate at predefined intervals. This helps the model to make larger steps in the parameter space early in training (when it's far from the optimum) and then take smaller, more precise steps as it approaches convergence.
+-   **Gamma (0.7)**: A common decay factor. Reducing the learning rate by 30% every epoch (as configured in `main()`) helps prevent oscillations around the minimum and allows for finer adjustments to the model weights in later epochs.
+
+#### Rationale for Learning Rate (1.0)
+
+-   **Adadelta's Nature**: For Adadelta, the initial learning rate (here 1.0) is often set to a default value as the optimizer itself adapts the per-parameter learning rates. It's less sensitive to the initial global learning rate compared to optimizers like SGD.
+
+#### Rationale for Epochs (14)
+
+-   **Empirical Choice**: The number of epochs (14 for the full dataset) is typically determined empirically. It's chosen to allow the model sufficient time to converge without overfitting. This value was found to provide good performance on the MNIST dataset within a reasonable training time.
+
+#### Rationale for Log Interval (10)
+
+-   **Monitoring Progress**: The `log_interval` (10 batches) determines how frequently training progress (loss) is printed to the console. A value of 10 provides a good balance between seeing frequent updates and not flooding the console with too much information.
 
 ## Functions
 
