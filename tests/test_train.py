@@ -3,7 +3,7 @@ import torch
 import torch.optim as optim
 from model import Net
 from data_loader import get_data_loaders
-from train import train, test
+from train import train, evaluate
 
 class TestTrain(unittest.TestCase):
 
@@ -30,7 +30,7 @@ class TestTrain(unittest.TestCase):
     def test_test_function(self):
         # Test if the test function runs without errors
         try:
-            test(self.model, self.test_loader)
+            evaluate(self.model, self.test_loader)
         except Exception as e:
             self.fail(f"test() function raised an exception: {e}")
 

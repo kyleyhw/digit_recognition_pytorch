@@ -14,7 +14,7 @@ def train(model, train_loader, optimizer, epoch, log_interval=10):
         if batch_idx % log_interval == 0:
             print(f'Train Epoch: {epoch} [{batch_idx * len(data)}/{len(train_loader.dataset)} ({100. * batch_idx / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
 
-def test(model, test_loader):
+def evaluate(model, test_loader):
     model.eval()
     test_loss = 0
     correct = 0
