@@ -59,7 +59,7 @@ class DigitRecognizerApp:
 
     def load_model(self):
         model = Net()
-        model.load_state_dict(torch.load("models/mnist_cnn_subset_12000.pt"))
+        model.load_state_dict(torch.load("models/mnist_cnn_full_dataset.pt"))
         model.eval()
         return model
 
@@ -86,8 +86,47 @@ class DigitRecognizerApp:
             self.confidence_labels[i][1].config(text="0.00%")
             self.confidence_bars[i]['value'] = 0
 
+    def center_image(self, img_array):
+        # Find the bounding box of the non-zero pixels
+        rows = np.any(img_array, axis=1)
+        cols = np.any(img_array, axis=0)
+        rmin, rmax = np.where(rows)[0][[0, -1]] if np.any(rows) else (0, 0)
+        cmin, cmax = np.where(cols)[0][[0, -1]] if np.any(cols) else (0, 0)
+
+        # If no pixels are drawn, return an empty array
+        if rmin == rmax and cmin == cmax and img_array[rmin, cmin] == 0:
+            return np.zeros((self.grid_size, self.grid_size))
+
+        cropped = img_array[rmin:rmax+1, cmin:cmax+1]
+
+        # Calculate new dimensions for centering
+        rows, cols = cropped.shape
+        if rows > cols:
+            factor = 20.0 / rows
+            rows = 20
+            cols = int(round(cols * factor))
+        else:
+            factor = 20.0 / cols
+            cols = 20
+            rows = int(round(rows * factor))
+
+        # Resize the image to 20x20, maintaining aspect ratio
+        from PIL import Image
+        img = Image.fromarray((cropped * 255).astype(np.uint8), mode='L')
+        img = img.resize((cols, rows), Image.LANCZOS)
+        resized_array = np.array(img) / 255.0
+
+        # Create a new 28x28 array and place the resized digit in the center
+        centered_array = np.zeros((self.grid_size, self.grid_size))
+        row_start = (self.grid_size - rows) // 2
+        col_start = (self.grid_size - cols) // 2
+        centered_array[row_start:row_start+rows, col_start:col_start+cols] = resized_array
+
+        return centered_array
+
     def predict_realtime(self):
-        img_tensor = torch.from_numpy(self.grid).float().unsqueeze(0).unsqueeze(0)
+        processed_grid = self.center_image(self.grid)
+        img_tensor = torch.from_numpy(processed_grid).float().unsqueeze(0).unsqueeze(0)
         img_tensor = (img_tensor - 0.5) / 0.5
 
         with torch.no_grad():

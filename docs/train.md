@@ -68,3 +68,5 @@ To start the training process, run the script:
 ```bash
 python train.py
 ```
+
+*Note: The `main` function in `train.py` currently uses a subset of the MNIST dataset for faster training. You can modify the `range()` arguments for `train_dataset` and `test_dataset` to adjust the subset size, or remove these lines entirely to train on the full dataset.*

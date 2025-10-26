@@ -28,8 +28,8 @@ For a complete overview of the project's documentation, please see the **[Docume
 ├───docs/
 │   ├───index.md
 │   ├───data_loader.md
-│   ├───model.md
-│   └───train.md
+│   ├───train.md
+│   └───gui.md
 ├───models/
 │   ├───mnist_cnn_subset_1200.pt
 │   └───mnist_cnn_subset_12000.pt
