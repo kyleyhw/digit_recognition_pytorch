@@ -46,6 +46,7 @@ class DigitRecognizerApp:
         self.grid = np.zeros((self.grid_size, self.grid_size))
 
         self.canvas.bind("<B1-Motion>", self.paint)
+        self.rect_ids = np.empty((self.grid_size, self.grid_size), dtype=object)
         self.draw_grid()
 
     def draw_grid(self):
@@ -55,7 +56,8 @@ class DigitRecognizerApp:
                 y1 = i * self.pixel_size
                 x2 = x1 + self.pixel_size
                 y2 = y1 + self.pixel_size
-                self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="gray")
+                rect_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="gray")
+                self.rect_ids[i, j] = rect_id
 
     def load_model(self):
         model = Net()
@@ -67,18 +69,34 @@ class DigitRecognizerApp:
         x, y = event.x, event.y
         grid_x, grid_y = x // self.pixel_size, y // self.pixel_size
 
-        if 0 <= grid_x < self.grid_size and 0 <= grid_y < self.grid_size:
-            self.grid[grid_y, grid_x] = 1.0
-            x1 = grid_x * self.pixel_size
-            y1 = grid_y * self.pixel_size
-            x2 = x1 + self.pixel_size
-            y2 = y1 + self.pixel_size
-            self.canvas.create_rectangle(x1, y1, x2, y2, fill="black", outline="black")
-            self.predict_realtime()
+        brush_kernel = np.array([
+            [0.0, 0.1, 0.2, 0.1, 0.0],
+            [0.1, 0.3, 0.5, 0.3, 0.1],
+            [0.2, 0.5, 1.0, 0.5, 0.2],
+            [0.1, 0.3, 0.5, 0.3, 0.1],
+            [0.0, 0.1, 0.2, 0.1, 0.0]
+        ])
+        kernel_radius = brush_kernel.shape[0] // 2 # 2 for a 5x5 kernel
+
+        for dy in range(-kernel_radius, kernel_radius + 1):
+            for dx in range(-kernel_radius, kernel_radius + 1):
+                current_grid_x = grid_x + dx
+                current_grid_y = grid_y + dy
+
+                if 0 <= current_grid_x < self.grid_size and 0 <= current_grid_y < self.grid_size:
+                    # Add kernel value, clamping at 1.0
+                    self.grid[current_grid_y, current_grid_x] = min(1.0, self.grid[current_grid_y, current_grid_x] + brush_kernel[dy + kernel_radius, dx + kernel_radius])
+                    
+                    # Update canvas rectangle color
+                    gray_value = int((1 - self.grid[current_grid_y, current_grid_x]) * 255) # Invert for white background
+                    hex_color = f'#{gray_value:02x}{gray_value:02x}{gray_value:02x}'
+                    self.canvas.itemconfig(self.rect_ids[current_grid_y, current_grid_x], fill=hex_color, outline=hex_color)
+        self.predict_realtime()
 
     def clear_canvas(self):
         self.grid = np.zeros((self.grid_size, self.grid_size))
         self.canvas.delete("all")
+        self.rect_ids = np.empty((self.grid_size, self.grid_size), dtype=object) # Reset rect_ids
         self.draw_grid()
         self.prediction_label.config(text="Prediction: ")
         for i in range(10):
