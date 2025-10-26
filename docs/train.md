@@ -58,8 +58,26 @@ This helps to make larger updates at the beginning of training and smaller, more
 ## Functions
 
 -   `train()`: Handles the training loop for one epoch.
--   `test()`: Evaluates the model on the test set.
--   `main()`: Orchestrates the entire process.
+-   `evaluate()`: Evaluates the model on the test set.
+-   `save_checkpoint()`: Saves the current state of the model and optimizer.
+-   `load_checkpoint()`: Loads a saved state to resume training.
+-   `main()`: Orchestrates the entire process, including checkpointing.
+
+## Checkpointing
+
+Checkpointing allows for saving the state of the training process at regular intervals. This is crucial for long training runs, as it enables resuming training from the last saved point in case of interruptions or for experimenting with different parameters without restarting from scratch.
+
+### Naming Convention for Checkpoints
+
+To support multiple training instances (e.g., training on different data subsets) simultaneously, a unique `run_id` is used. Checkpoints are saved with the following convention:
+
+`checkpoints/checkpoint_<run_id>.pt`
+
+This ensures that each training run has its own set of checkpoints, preventing conflicts and allowing for easy management of different experiments.
+
+### Resuming Training
+
+When `main()` is called, it first checks for an existing checkpoint file (`checkpoint_<run_id>.pt`) in the `checkpoints/` directory. If found, the model and optimizer states are loaded, and training resumes from the epoch saved in the checkpoint. Otherwise, training starts from epoch 1.
 
 ## Usage
 

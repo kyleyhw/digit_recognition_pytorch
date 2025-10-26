@@ -32,6 +32,7 @@ This plot demonstrates how the test loss of the digit recognition model decrease
 ├───README.md
 ├───training_performance.png
 ├───__pycache__/
+├───checkpoints/
 ├───docs/
 │   ├───index.md
 │   ├───data_loader.md
@@ -82,6 +83,10 @@ The `train.py` script is configured to train on the full dataset by default. You
 ```bash
 python train.py
 ```
+
+### Checkpointing
+
+Training progress is automatically saved as checkpoints in the `checkpoints/` directory. This allows for resuming training from the last saved epoch. Checkpoints are named using a `run_id` (e.g., `checkpoint_full_dataset.pt`) to support multiple simultaneous training instances. To resume a specific training run, ensure the `run_id` in the `main` function call matches the desired checkpoint.
 
 ### GUI
 
