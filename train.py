@@ -35,13 +35,20 @@ def main():
 
     train_loader, test_loader = get_data_loaders()
 
+    # Create a subset of the datasets for faster training
+    train_dataset = torch.utils.data.Subset(train_loader.dataset, range(1200))
+    test_dataset = torch.utils.data.Subset(test_loader.dataset, range(200))
+
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
+
     model = Net()
     optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
 
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=gamma)
     for epoch in range(1, epochs + 1):
         train(model, train_loader, optimizer, epoch)
-        test(model, test_loader)
+        evaluate(model, test_loader)
         scheduler.step()
 
     torch.save(model.state_dict(), "mnist_cnn.pt")
