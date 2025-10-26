@@ -56,8 +56,10 @@ def load_checkpoint(model, optimizer, filename="checkpoint.pt"):
         return 0
 
 def evaluate_models_for_plot():
-    model_sizes = [1200, 12000, 60000]  # Approximate training data sizes
+    model_sizes = [100, 500, 1200, 12000, 60000]  # Approximate training data sizes
     model_paths = [
+        "models/mnist_cnn_subset_100.pt",
+        "models/mnist_cnn_subset_500.pt",
         "models/mnist_cnn_subset_1200.pt",
         "models/mnist_cnn_subset_12000.pt",
         "models/mnist_cnn_full_dataset.pt"
@@ -79,18 +81,18 @@ def evaluate_models_for_plot():
     
     return model_sizes, losses, accuracies
 
-def main(run_id="default_run", use_full_dataset=True, epochs=14):
+def main(run_id="default_run", use_full_dataset=True, epochs=14, train_subset_size=None, test_subset_size=None):
     learning_rate = 1.0
     gamma = 0.7
 
     train_loader, test_loader = get_data_loaders()
 
-    if not use_full_dataset:
-        # Create a subset of the datasets for faster training
-        train_dataset = torch.utils.data.Subset(train_loader.dataset, range(12000))
-        test_dataset = torch.utils.data.Subset(test_loader.dataset, range(2000))
-
+    if train_subset_size is not None:
+        train_dataset = torch.utils.data.Subset(train_loader.dataset, range(train_subset_size))
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+    
+    if test_subset_size is not None:
+        test_dataset = torch.utils.data.Subset(test_loader.dataset, range(test_subset_size))
         test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
 
     model = Net()
@@ -112,23 +114,28 @@ def main(run_id="default_run", use_full_dataset=True, epochs=14):
     torch.save(model.state_dict(), os.path.join("models", f"mnist_cnn_{run_id}.pt"))
 
 if __name__ == '__main__':
-    # To generate the plot, uncomment the lines below and comment out main() call
-    # model_sizes, losses, accuracies = evaluate_models_for_plot()
-
-    # plt.figure(figsize=(10, 6))
-    # plt.plot(model_sizes, losses, marker='o', linestyle='-', color='b')
-    # plt.title('Model Test Loss vs. Training Data Size')
-    # plt.xlabel('Training Data Size')
-    # plt.ylabel('Test Loss (Negative Log Likelihood)')
-    # plt.xscale('log') # Use log scale for x-axis if data sizes vary widely
-    # plt.grid(True)
-    # plt.savefig('training_performance.png')
-    # plt.close()
-
-    # print("Generated training_performance.png")
-
     # Example usage for training with checkpointing
     # To train on full dataset:
-    main(run_id="full_dataset", use_full_dataset=True, epochs=14)
+    # main(run_id="full_dataset", use_full_dataset=True, epochs=14)
     # To train on a subset (e.g., 12000 images):
     # main(run_id="subset_12000", use_full_dataset=False, epochs=10)
+
+    # Train for plot datapoints
+    # Train on 100 images
+    # main(run_id="subset_100", epochs=14, train_subset_size=100, test_subset_size=200)
+    # Train on 500 images
+    # main(run_id="subset_500", epochs=14, train_subset_size=500, test_subset_size=200)
+
+    model_sizes, losses, accuracies = evaluate_models_for_plot()
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(model_sizes, losses, marker='o', linestyle='-', color='b')
+    plt.title('Model Test Loss vs. Training Data Size')
+    plt.xlabel('Training Data Size')
+    plt.ylabel('Test Loss (Negative Log Likelihood)')
+    plt.xscale('log') # Use log scale for x-axis if data sizes vary widely
+    plt.grid(True)
+    plt.savefig('docs/images/training_performance.png')
+    plt.close()
+
+    print("Generated training_performance.png")
