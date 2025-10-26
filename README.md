@@ -14,6 +14,12 @@ This project is a handwritten digit recognizer built using PyTorch. It utilizes 
 
 For a complete overview of the project's documentation, please see the **[Documentation Index](docs/index.md)**.
 
+## Training Performance Analysis
+
+![Model Test Loss vs. Training Data Size](training_performance.png)
+
+This plot demonstrates how the test loss of the digit recognition model decreases as the size of the training dataset increases. For a detailed explanation of this analysis, including how to interpret loss, please refer to the **[Training Performance Analysis](docs/training_performance.md)** documentation.
+
 ## Project Structure
 
 ```
@@ -24,15 +30,19 @@ For a complete overview of the project's documentation, please see the **[Docume
 ├───train.py
 ├───gui.py
 ├───README.md
+├───training_performance.png
 ├───__pycache__/
 ├───docs/
 │   ├───index.md
 │   ├───data_loader.md
+│   ├───model.md
 │   ├───train.md
-│   └───gui.md
+│   ├───gui.md
+│   └───training_performance.md
 ├───models/
 │   ├───mnist_cnn_subset_1200.pt
-│   └───mnist_cnn_subset_12000.pt
+│   ├───mnist_cnn_subset_12000.pt
+│   └───mnist_cnn_full_dataset.pt
 ├───test_reports/
 │   ├───test_data_loader_report.md
 │   ├───test_model_report.md
@@ -67,7 +77,7 @@ For a complete overview of the project's documentation, please see the **[Docume
 
 ### Training
 
-The `train.py` script is configured to train on a subset of the data for faster execution. You can modify the `main` function in `train.py` to change the subset size and number of epochs. The trained model will be saved to the project root and should be moved to the `models/` directory.
+The `train.py` script is configured to train on the full dataset by default. You can modify the `main` function in `train.py` to adjust the subset size and number of epochs for custom training runs. The trained model will be saved to the project root and should be moved to the `models/` directory.
 
 ```bash
 python train.py
@@ -75,7 +85,7 @@ python train.py
 
 ### GUI
 
-The GUI uses the latest trained model. Make sure the `gui.py` script is pointing to the correct model file in the `models/` directory.
+The GUI is currently configured to use the `mnist_cnn_full_dataset.pt` model for predictions. You can modify the `load_model` function in `gui.py` to switch to a different trained model (e.g., `mnist_cnn_subset_1200.pt` or `mnist_cnn_subset_12000.pt`) if desired.
 
 ```bash
 python gui.py

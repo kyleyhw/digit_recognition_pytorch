@@ -11,3 +11,5 @@ This page serves as a central index for the project's documentation.
 - **[Training Process (`train.md`)](train.md)**: Describes the training and evaluation loop, including the loss function, optimizer, and learning rate scheduling.
 
 - **[GUI (`gui.md`)](gui.md)**: Explains the interactive graphical user interface, including the image centering preprocessing.
+
+- **[Training Performance Analysis (`training_performance.md`)](training_performance.md)**: Analyzes the impact of training data size on model performance, including an explanation of loss and a plot.

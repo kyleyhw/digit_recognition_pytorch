@@ -3,6 +3,8 @@ import torch.optim as optim
 from model import Net
 from data_loader import get_data_loaders
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import numpy as np
 
 def train(model, train_loader, optimizer, epoch, log_interval=10):
     model.train()
@@ -28,6 +30,29 @@ def evaluate(model, test_loader):
 
     test_loss /= len(test_loader.dataset)
     print(f'\nTest set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset):.0f}%)\n')
+    return test_loss, correct / len(test_loader.dataset)
+
+def evaluate_models_for_plot():
+    model_sizes = [1200, 12000, 60000]  # Approximate training data sizes
+    model_paths = [
+        "models/mnist_cnn_subset_1200.pt",
+        "models/mnist_cnn_subset_12000.pt",
+        "models/mnist_cnn_full_dataset.pt"
+    ]
+    
+    _, full_test_loader = get_data_loaders() # Use full test set for evaluation
+
+    losses = []
+    accuracies = []
+
+    for path in model_paths:
+        model = Net()
+        model.load_state_dict(torch.load(path))
+        loss, acc = evaluate(model, full_test_loader)
+        losses.append(loss)
+        accuracies.append(acc)
+    
+    return model_sizes, losses, accuracies
 
 def main():
     epochs = 14
@@ -48,4 +73,17 @@ def main():
     torch.save(model.state_dict(), "mnist_cnn_full_dataset.pt")
 
 if __name__ == '__main__':
-    main()
+    # main() # Comment out main training when generating plot
+    model_sizes, losses, accuracies = evaluate_models_for_plot()
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(model_sizes, losses, marker='o', linestyle='-', color='b')
+    plt.title('Model Test Loss vs. Training Data Size')
+    plt.xlabel('Training Data Size')
+    plt.ylabel('Test Loss (Negative Log Likelihood)')
+    plt.xscale('log') # Use log scale for x-axis if data sizes vary widely
+    plt.grid(True)
+    plt.savefig('training_performance.png')
+    plt.close()
+
+    print("Generated training_performance.png")
