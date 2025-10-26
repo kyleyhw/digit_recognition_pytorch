@@ -5,6 +5,3 @@
 __pycache__/
 *.pyc
 
-# PyTorch
-*.pt
-*.pth

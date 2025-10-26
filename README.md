@@ -7,8 +7,12 @@ This project is a handwritten digit recognizer built using PyTorch. It utilizes 
 - **Convolutional Neural Network (CNN)**: A `Net` class defining the model architecture in `model.py`.
 - **Training and Evaluation**: Scripts to train the model on the MNIST dataset and evaluate its performance.
 - **Interactive GUI**: A user-friendly interface to draw digits and get predictions from the trained model.
-- **Detailed Documentation**: In-depth explanation of the mathematical principles behind the code in the `/docs` directory.
+- **Detailed Documentation**: In-depth explanation of the mathematical principles behind the code.
 - **Unit and Integration Tests**: A suite of tests to ensure the correctness of the data loading, model, and training functions.
+
+## Documentation
+
+For a complete overview of the project's documentation, please see the **[Documentation Index](docs/index.md)**.
 
 ## Project Structure
 
@@ -22,11 +26,13 @@ This project is a handwritten digit recognizer built using PyTorch. It utilizes 
 ├───README.md
 ├───__pycache__/
 ├───docs/
+│   ├───index.md
 │   ├───data_loader.md
 │   ├───model.md
 │   └───train.md
 ├───models/
-│   └───mnist_cnn_subset_1200.pt
+│   ├───mnist_cnn_subset_1200.pt
+│   └───mnist_cnn_subset_12000.pt
 ├───test_reports/
 │   ├───test_data_loader_report.md
 │   ├───test_model_report.md
@@ -61,17 +67,15 @@ This project is a handwritten digit recognizer built using PyTorch. It utilizes 
 
 ### Training
 
-To train the model, run the `train.py` script. The trained model will be saved as `mnist_cnn.pt`.
+The `train.py` script is configured to train on a subset of the data for faster execution. You can modify the `main` function in `train.py` to change the subset size and number of epochs. The trained model will be saved to the project root and should be moved to the `models/` directory.
 
 ```bash
 python train.py
 ```
 
-*Note: The current configuration trains on a subset of the data for faster execution. You can modify `train.py` to use the full dataset.*
-
 ### GUI
 
-Once the model is trained, you can launch the GUI to test it with your own drawings.
+The GUI uses the latest trained model. Make sure the `gui.py` script is pointing to the correct model file in the `models/` directory.
 
 ```bash
 python gui.py

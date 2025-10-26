@@ -29,15 +29,15 @@ def evaluate(model, test_loader):
     print(f'\nTest set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset):.0f}%)\n')
 
 def main():
-    epochs = 14
+    epochs = 10
     learning_rate = 1.0
     gamma = 0.7
 
     train_loader, test_loader = get_data_loaders()
 
     # Create a subset of the datasets for faster training
-    train_dataset = torch.utils.data.Subset(train_loader.dataset, range(1200))
-    test_dataset = torch.utils.data.Subset(test_loader.dataset, range(200))
+    train_dataset = torch.utils.data.Subset(train_loader.dataset, range(12000))
+    test_dataset = torch.utils.data.Subset(test_loader.dataset, range(2000))
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False)
@@ -51,7 +51,7 @@ def main():
         evaluate(model, test_loader)
         scheduler.step()
 
-    torch.save(model.state_dict(), "mnist_cnn.pt")
+    torch.save(model.state_dict(), "mnist_cnn_subset_12000.pt")
 
 if __name__ == '__main__':
     main()

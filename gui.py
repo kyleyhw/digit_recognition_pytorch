@@ -59,7 +59,7 @@ class DigitRecognizerApp:
 
     def load_model(self):
         model = Net()
-        model.load_state_dict(torch.load("models/mnist_cnn_subset_1200.pt"))
+        model.load_state_dict(torch.load("models/mnist_cnn_subset_12000.pt"))
         model.eval()
         return model
 
