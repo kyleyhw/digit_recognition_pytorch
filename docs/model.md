@@ -14,9 +14,9 @@ The network is a sequence of layers, each performing a specific mathematical tra
 
 1.  **`conv1` & `conv2`: Convolutional Layers**
 
-    A convolutional layer applies a set of learnable filters (kernels) to an input image. This operation is a discrete convolution. For a 2D input image $I$ and a kernel $K$, the output feature map $O$ is given by:
+    A convolutional layer applies a set of learnable filters (kernels) to an input image. This operation is a discrete convolution [[1]](#ref-goodfellow-2016). For a 2D input image $I$ and a kernel $K$, the output feature map $O$ is given by:
 
-    $$ O(i, j) = (I * K)(i, j) = \sum_{m} \sum_{n} I(i-m, j-n) K(m, n) + b $$
+    $ O(i, j) = (I * K)(i, j) = \sum_{m} \sum_{n} I(i-m, j-n) K(m, n) + b $
 
     Where:
     - `*` denotes the convolution operation.
@@ -24,25 +24,25 @@ The network is a sequence of layers, each performing a specific mathematical tra
 
     **Design Rationale:**
     -   **Two Layers**: A common practice for initial CNN architectures, allowing the model to learn hierarchical features. `conv1` learns basic features (edges, corners), while `conv2` learns more complex patterns from `conv1`'s output.
-    -   **3x3 Kernels**: Small kernel sizes are preferred in modern CNNs. They are computationally less expensive than larger kernels and allow for deeper networks. Multiple small kernels can achieve the same receptive field as one large kernel but with more non-linearities and fewer parameters.
+    -   **3x3 Kernels**: Small kernel sizes are preferred in modern CNNs. They are computationally less expensive than larger kernels and allow for deeper networks. Multiple small kernels can achieve the same receptive field as one large kernel but with more non-linearities and fewer parameters [[1]](#ref-goodfellow-2016).
     -   **Increasing Filters (32, 64)**: The number of filters (output channels) typically increases with depth in a CNN. This allows the network to learn a richer and more diverse set of features as it processes the input. `conv1` produces 32 feature maps, and `conv2` produces 64.
 
 2.  **ReLU Activation Function**
 
-    After each convolution, a Rectified Linear Unit (ReLU) activation function is applied element-wise. It introduces non-linearity into the model, which is crucial for learning complex patterns.
+    After each convolution, a Rectified Linear Unit (ReLU) activation function is applied element-wise. It introduces non-linearity into the model, which is crucial for learning complex patterns [[1]](#ref-goodfellow-2016).
 
-    $$ \text{ReLU}(x) = \max(0, x) $$
+    $ \text{ReLU}(x) = \max(0, x) $
 
     ![ReLU Plot](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Rectifier_and_softplus_functions.svg/320px-Rectifier_and_softplus_functions.svg.png)
 
     **Design Rationale:**
     -   **Non-linearity**: Without non-linear activation functions, a neural network would simply be a series of linear transformations, limiting its ability to learn complex, non-linear relationships in data.
     -   **Computational Efficiency**: ReLU is computationally very efficient as it only involves a simple thresholding operation.
-    -   **Mitigates Vanishing Gradients**: Unlike sigmoid or tanh functions, ReLU does not suffer from vanishing gradients for positive inputs, which helps in training deeper networks.
+    -   **Mitigates Vanishing Gradients**: Unlike sigmoid or tanh functions, ReLU does not suffer from vanishing gradients for positive inputs, which helps in training deeper networks [[1]](#ref-goodfellow-2016).
 
 3.  **Max Pooling**
 
-    Max pooling is a down-sampling operation. It reduces the spatial dimensions of the feature maps, which reduces the number of parameters and computation in the network. It also helps to make the representation more robust to small translations of the input.
+    Max pooling is a down-sampling operation. It reduces the spatial dimensions of the feature maps, which reduces the number of parameters and computation in the network. It also helps to make the representation more robust to small translations of the input [[1]](#ref-goodfellow-2016).
 
     A 2x2 max pooling operation takes the maximum value from each 2x2 block of the input feature map.
 
@@ -52,7 +52,7 @@ The network is a sequence of layers, each performing a specific mathematical tra
 
 4.  **`dropout1` & `dropout2`: Dropout**
 
-    Dropout is a regularization technique to prevent overfitting. During training, it randomly sets a fraction of the input units to 0 with a probability $p$ (here $p=0.25$ and $p=0.5$). This can be seen as training a large number of thinned networks.
+    Dropout is a regularization technique to prevent overfitting. During training, it randomly sets a fraction of the input units to 0 with a probability $p$ (here $p=0.25$ and $p=0.5$). This can be seen as training a large number of thinned networks [[2]](#ref-srivastava-2014).
 
     The output of a neuron $y$ is multiplied by a random variable $d \sim \text{Bernoulli}(1-p)$.
 
@@ -64,9 +64,9 @@ The network is a sequence of layers, each performing a specific mathematical tra
 
 5.  **`fc1` & `fc2`: Fully Connected Layers**
 
-    A fully connected layer applies a linear transformation to the input vector $x$:
+    A fully connected layer applies a linear transformation to the input vector $x$ [[1]](#ref-goodfellow-2016):
 
-    $$ y = Wx + b $$
+    $ y = Wx + b $
 
     Where:
     - $W$ is the weight matrix.
@@ -75,7 +75,7 @@ The network is a sequence of layers, each performing a specific mathematical tra
     - `fc2` maps the 128-dimensional vector to a 10-dimensional vector, corresponding to the 10 digit classes.
 
     **Design Rationale:**
-    -   **Classification Head**: Fully connected layers are typically used at the end of a CNN to perform the final classification based on the high-level features extracted by the convolutional layers.
+    -   **Classification Head**: Fully connected layers are typically used at the end of a CNN to perform the final classification based on the high-level features extracted by the convolutional layers [[1]](#ref-goodfellow-2016).
     -   **Layer Sizes (9216, 128, 10)**:
         -   **9216**: This number is determined by the output dimensions of the last convolutional layer after pooling and before flattening. It's `(output_width * output_height * num_filters_conv2)`. This is not a design choice but a consequence of previous layers.
         -   **128**: A common choice for a hidden layer size in a simple classifier, providing enough capacity to learn complex relationships without being excessively large.
@@ -87,9 +87,9 @@ The network is a sequence of layers, each performing a specific mathematical tra
 
     The **softmax** function converts a vector of $K$ real numbers into a probability distribution of $K$ possible outcomes. For a vector $z = (z_1, ..., z_K)$, the softmax is:
 
-    $$ \text{Softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} $$
+    $ \text{Softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} $
 
-    The output of the softmax is a vector of probabilities that sum to 1. The **log_softmax** is simply the logarithm of the softmax output. This is used in conjunction with the Negative Log Likelihood Loss (`NLLLoss`) for training. The combination is mathematically equivalent to `CrossEntropyLoss`, but can be more numerically stable.
+    The output of the softmax is a vector of probabilities that sum to 1. The **log_softmax** is simply the logarithm of the softmax output. This is used in conjunction with the Negative Log Likelihood Loss (`NLLLoss`) for training. The combination is mathematically equivalent to `CrossEntropyLoss`, but can be more numerically stable [[1]](#ref-goodfellow-2016).
 
     **Design Rationale:**
     -   **Probability Distribution**: Softmax ensures that the output can be interpreted as probabilities for each class, summing to 1.
@@ -102,7 +102,7 @@ This method defines the forward pass of the network, which is the sequence of tr
 
 ## Adapting CNNs for Time-Series Data
 
-While Convolutional Neural Networks are most famously used for image processing (2D data), their core concept of local feature extraction through filters can be effectively adapted to other data types, including **time-series data**.
+While Convolutional Neural Networks are most famously used for image processing (2D data), their core concept of local feature extraction through filters can be effectively adapted to other data types, including **time-series data** [[3]](#ref-kiranyaz-2021).
 
 ### 1D Convolutions
 
@@ -113,7 +113,7 @@ For time-series data, instead of 2D convolutions, we use **1D convolutions** (`n
 
 Mathematically, for a 1D input sequence $S$ and a 1D kernel $K$, the output $O$ is:
 
-$$ O(t) = (S * K)(t) = \sum_{\tau} S(t-\tau) K(\tau) + b $$
+$ O(t) = (S * K)(t) = \sum_{\tau} S(t-\tau) K(\tau) + b $
 
 Where:
 -   $S$ is the input time series.
@@ -130,3 +130,9 @@ Where:
 -   **Natural Language Processing (NLP)**: Although often handled by Recurrent Neural Networks (RNNs) or Transformers, 1D CNNs can be used to extract local features (n-grams) from sequences of word embeddings.
 
 By changing the convolution operation from 2D to 1D, and adjusting the input data format, the powerful feature learning capabilities of CNNs can be extended to a wide array of sequential data problems.
+
+## References
+
+1.  <span id="ref-goodfellow-2016">Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press. [PDF](https://www.deeplearningbook.org/contents/book.html)</span>
+2.  <span id="ref-srivastava-2014">Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: A simple way to prevent neural networks from overfitting. *Journal of Machine Learning Research*, 15(1), 1929-1958. [PDF](http://jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf)</span>
+3.  <span id="ref-kiranyaz-2021">Kiranyaz, S., Avci, O., Abdeljaber, O., Ince, T., Gabbouj, M., & Ince, G. F. (2021). 1D Convolutional Neural Networks for Time Series Analysis: A Review. *Sensors*, 21(13), 4363. [PDF](https://www.mdpi.com/1424-8220/21/13/4363/pdf)</span>

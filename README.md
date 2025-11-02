@@ -1,6 +1,6 @@
 # PyTorch Digit Recognizer
 
-This project is a handwritten digit recognizer built using PyTorch. It utilizes a Convolutional Neural Network (CNN) to classify digits from the MNIST dataset. The project also includes a graphical user interface (GUI) that allows users to draw their own digits and see the model's predictions in real-time.
+This project is a handwritten digit recognizer built using PyTorch. It utilizes a Convolutional Neural Network (CNN) to classify digits from the MNIST dataset [[1]](#ref-lecun-1998). The project also includes a graphical user interface (GUI) that allows users to draw their own digits and see the model's predictions in real-time.
 
 ## Features
 
@@ -18,7 +18,7 @@ For a complete and detailed overview of the project's architecture, mathematical
 
 ![Model Test Loss vs. Training Data Size](docs/images/training_performance.png)
 
-This plot demonstrates how the test loss of the digit recognition model decreases as the size of the training dataset increases. For a detailed explanation of this analysis, including how to interpret loss, please refer to the **[Training Performance Analysis](docs/training_performance.md)** documentation.
+This plot demonstrates how the test loss of the digit recognition model decreases as the size of the training dataset increases [[2]](#ref-bishop-2006). For a detailed explanation of this analysis, including how to interpret loss, please refer to the **[Training Performance Analysis](docs/training_performance.md)** documentation.
 
 ## Project Structure
 
@@ -101,6 +101,7 @@ python gui.py
 
 ## Testing
 
+
 The project includes a comprehensive test suite to ensure the correctness and reliability of the codebase. Tests cover data loading, model architecture, and training/evaluation logic.
 
 To run the test suite, use `pytest`:
@@ -110,3 +111,8 @@ pytest
 ```
 
 For detailed information on the test suite, including its structure, purpose, and how to interpret test reports, please refer to the **[Testing Documentation](docs/testing.md)**.
+
+## References
+
+1.  <span id="ref-lecun-1998">LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. (1998). Gradient-based learning applied to document recognition. *Proceedings of the IEEE*, 86(11), 2278-2324. [PDF](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf)</span>
+2.  <span id="ref-bishop-2006">Bishop, C. M. (2006). *Pattern Recognition and Machine Learning*. Springer. [Amazon](https://www.amazon.com/Pattern-Recognition-Learning-Information-Statistics/dp/0387310738)</span>

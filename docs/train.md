@@ -6,8 +6,8 @@ This script is the main entry point for training and evaluating the MNIST digit 
 
 ### Epochs and Batches
 
--   **Epoch**: One complete pass through the entire training dataset.
--   **Batch**: A subset of the training dataset. Instead of processing the entire dataset at once, the data is split into smaller batches. This is more memory-efficient and allows the model to be updated more frequently.
+-   **Epoch**: One complete pass through the entire training dataset [[1]](#ref-goodfellow-2016).
+-   **Batch**: A subset of the training dataset. Instead of processing the entire dataset at once, the data is split into smaller batches. This is more memory-efficient and allows the model to be updated more frequently [[1]](#ref-goodfellow-2016).
 
 ### Loss Function: Negative Log-Likelihood Loss (`nll_loss`)
 
@@ -19,7 +19,7 @@ $$
 \text{Loss} = -z_c = -\log(p_c) 
 $$
 
-By minimizing this loss, we are maximizing the log-probability of the correct class. This is the principle of **Maximum Likelihood Estimation**.
+By minimizing this loss, we are maximizing the log-probability of the correct class. This is the principle of **Maximum Likelihood Estimation** [[1]](#ref-goodfellow-2016).
 
 #### Rationale for NLL Loss
 
@@ -29,13 +29,13 @@ By minimizing this loss, we are maximizing the log-probability of the correct cl
 
 ### Backpropagation
 
-The `loss.backward()` call initiates the **backpropagation** algorithm. This is the core mechanism for training neural networks. It calculates the gradient of the loss function with respect to each of the model's parameters (weights and biases). This is done by applying the chain rule of calculus, starting from the final layer and working backwards through the network.
+The `loss.backward()` call initiates the **backpropagation** algorithm. This is the core mechanism for training neural networks. It calculates the gradient of the loss function with respect to each of the model's parameters (weights and biases). This is done by applying the chain rule of calculus, starting from the final layer and working backwards through the network [[1]](#ref-goodfellow-2016).
 
 For a parameter $w$, the gradient is $\frac{\partial \text{Loss}}{\partial w}$.
 
 ### Optimizer: `Adadelta`
 
-The optimizer's role is to update the model's parameters using the gradients calculated by backpropagation, in order to minimize the loss function. `Adadelta` is an adaptive learning rate method.
+The optimizer's role is to update the model's parameters using the gradients calculated by backpropagation, in order to minimize the loss function. `Adadelta` is an adaptive learning rate method [[2]](#ref-zeiler-2012).
 
 Instead of a fixed learning rate, Adadelta adapts the learning rate for each parameter based on the history of gradients. The update rule for a parameter $\theta$ at timestep $t$ is:
 
@@ -57,7 +57,7 @@ This method has the advantage of not requiring a default learning rate.
 
 ### Learning Rate Scheduler: `StepLR`
 
-A learning rate scheduler adjusts the learning rate during training. The `StepLR` scheduler decays the learning rate by a factor of `gamma` every `step_size` epochs.
+A learning rate scheduler adjusts the learning rate during training [[1]](#ref-goodfellow-2016). The `StepLR` scheduler decays the learning rate by a factor of `gamma` every `step_size` epochs.
 
 The learning rate at epoch `e` is given by:
 
@@ -117,3 +117,8 @@ python train.py
 ```
 
 *Note: The `main` function in `train.py` currently uses a subset of the MNIST dataset for faster training. You can modify the `range()` arguments for `train_dataset` and `test_dataset` to adjust the subset size, or remove these lines entirely to train on the full dataset.*
+
+## References
+
+1.  <span id="ref-goodfellow-2016">Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press. [PDF](https://www.deeplearningbook.org/contents/book.html)</span>
+2.  <span id="ref-zeiler-2012">Zeiler, M. D. (2012). ADADELTA: An adaptive learning rate method. *arXiv preprint arXiv:1212.5701*. [PDF](https://arxiv.org/pdf/1212.5701.pdf)</span>
